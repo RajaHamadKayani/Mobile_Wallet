@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mobile_wallet/card_name_screen/card_name_screen.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,14 +18,12 @@ class PickImage extends StatefulWidget {
 class _PickImageState extends State<PickImage>
     with SingleTickerProviderStateMixin {
   late AnimationController animationController;
-
+  File? image;
   @override
   void initState() {
     super.initState();
     animationController = AnimationController(vsync: this);
   }
-
-  List<File> selectedImages = []; // List to store selected images
 
   Future<void> galleryImage(BuildContext context) async {
     final imagePicker = ImagePicker();
@@ -34,19 +33,7 @@ class _PickImageState extends State<PickImage>
     );
     if (pickedImage != null) {
       setState(() {
-        selectedImages.add(File(pickedImage.path)); // Add to the list
-      });
-    }
-  }
-
-  Future<void> _addToWallet() async {
-    if (selectedImages.isNotEmpty) {
-      for (final imagePath in selectedImages) {
-        await ImageDatabaseHelper.instance.insertImage(imagePath.path);
-      }
-      // Clear the selectedImages list after adding to the wallet
-      setState(() {
-        selectedImages.clear();
+        image = File(pickedImage.path);
       });
     }
   }
@@ -59,7 +46,7 @@ class _PickImageState extends State<PickImage>
     );
     if (pickedImage != null) {
       setState(() {
-        selectedImages.add(File(pickedImage.path)); // Add to the list
+        image = File(pickedImage.path); // Add to the list
       });
     }
   }
@@ -93,6 +80,8 @@ class _PickImageState extends State<PickImage>
         ),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -179,11 +168,30 @@ class _PickImageState extends State<PickImage>
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Container(
+                  height: 300,
+                  width: 300,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: Colors.black,
+                    ),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: image == null
+                        ? Lottie.asset("assets/json/no_image.json")
+                        : Image.file(image!),
+                  ),
+                ),
                 SizedBox(
                   height: 20,
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    var box = await Hive.openBox("mobile_wallet");
+                    box.put("cards", image);
+                  },
                   child: Container(
                     child: RichText(
                       text: TextSpan(children: [
@@ -210,54 +218,37 @@ class _PickImageState extends State<PickImage>
                 SizedBox(
                   height: 10,
                 ),
-                Container(
-                  child: Expanded(
-                    child: selectedImages.isEmpty
-                        ? Lottie.asset("assets/json/no_image.json")
-                        : ListView.builder(
-                            itemCount: selectedImages.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(bottom: 10),
-                                child: Container(
-                                  height: 100,
-                                  width: 200,
-                                  child: Image.file(
-                                    selectedImages[index],
-                                    fit: BoxFit.fill,
-                                    alignment: Alignment.center,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                  ),
-                ),
               ],
             ),
           ),
-          FutureBuilder<List<String>>(
-            future: ImageDatabaseHelper.instance.getImages(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text("Error: ${snapshot.error}");
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Text("No images added to wallet yet.");
-              } else {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      final imagePath = snapshot.data![index];
-                      return Image.file(File(imagePath));
-                    },
-                  ),
-                );
-              }
-            },
-          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Your gym card are:",
+                  style: GoogleFonts.openSans(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                FutureBuilder(
+                    future: Hive.openBox("mobile_wallet"),
+                    builder: (context, snapshot) {
+                      return Container(
+                        height: 100,
+                        width: 100,
+                        child: FittedBox(
+                            fit: BoxFit.cover,
+                            child: Image.file(snapshot.data!.get("cards"))),
+                      );
+                    })
+              ],
+            ),
+          )
         ],
       ),
     );

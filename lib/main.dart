@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mobile_wallet/splash_screen/splash_screen.dart';
+import 'package:path_provider/path_provider.dart';
 
-Future<void> main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // final appDocumentDirectory =
-  //     await path_provider.getApplicationDocumentsDirectory();
-  // Hive.init(appDocumentDirectory.path);
-  // await Hive.openBox<String>(
-  //     'images'); // Create a Hive box for storing image paths
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var directory = await getApplicationDocumentsDirectory();
+  Hive.init(directory.path);
   runApp(const MyApp());
 }
 
