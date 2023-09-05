@@ -3,7 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mobile_wallet/home_screen/home_screen.dart';
-import 'package:mobile_wallet/pick_image/pick_image.dart';
+import 'package:mobile_wallet/pick_image/pick_gym_card.dart';
+import 'package:mobile_wallet/pick_image/pick_id_card.dart';
 
 class CardNameScreen extends StatefulWidget {
   const CardNameScreen({super.key});
@@ -67,13 +68,21 @@ class _CardNameScreenState extends State<CardNameScreen>
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const PickImage()));
+                                  builder: (context) => const PickGymImage()));
                         },
-                        child: ReusableRow(
-                            animationController: animationControllerAtm,
-                            firstText: "Gym",
-                            secondText: "Card",
-                            animation: "assets/json/gym.json"),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const PickIdCard()));
+                          },
+                          child: ReusableRow(
+                              animationController: animationControllerAtm,
+                              firstText: "Gym",
+                              secondText: "Card",
+                              animation: "assets/json/gym.json"),
+                        ),
                       ),
                       ReusableRow(
                           animationController: animationControllerId,

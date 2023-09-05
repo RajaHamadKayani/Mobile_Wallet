@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mobile_wallet/card_name_screen/card_name_screen.dart';
+import 'package:mobile_wallet/provider/provider.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ProviderClass>(context);
     // ignore: unused_local_variable
     double height = MediaQuery.of(context).size.height;
     // ignore: unused_local_variable
@@ -28,18 +30,19 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const CardNameScreen()));
-              },
-              icon: const Icon(
-                Icons.add,
-                color: Color(0xff000000),
-                size: 20,
-              )),
+          Consumer<ProviderClass>(
+            builder: (context, value, child) {
+              return IconButton(
+                  onPressed: () {
+                    provider.navigateToCategoriesScreen(context);
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                    color: Color(0xff000000),
+                    size: 20,
+                  ));
+            },
+          ),
           SizedBox(
             width: width * .02,
           ),
