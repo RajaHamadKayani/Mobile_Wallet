@@ -21,7 +21,7 @@ class _PickGymImageState extends State<PickGymImage>
   List<Uint8List> imagesList = [];
 
   Future<void> getBoxName() async {
-    imageBox = await Hive.openBox<Uint8List>("images_box");
+    imageBox = await Hive.openBox<Uint8List>("gym_cards");
     imagesList = imageBox.values.toList();
     setState(() {});
   }

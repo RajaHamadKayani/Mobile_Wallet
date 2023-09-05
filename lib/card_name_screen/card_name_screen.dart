@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mobile_wallet/home_screen/home_screen.dart';
+import 'package:mobile_wallet/pick_image/pick_atm_card.dart';
 import 'package:mobile_wallet/pick_image/pick_gym_card.dart';
 import 'package:mobile_wallet/pick_image/pick_id_card.dart';
+import 'package:mobile_wallet/pick_image/pick_student_card.dart';
 
 class CardNameScreen extends StatefulWidget {
   const CardNameScreen({super.key});
@@ -70,35 +72,52 @@ class _CardNameScreenState extends State<CardNameScreen>
                               MaterialPageRoute(
                                   builder: (context) => const PickGymImage()));
                         },
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const PickIdCard()));
-                          },
-                          child: ReusableRow(
-                              animationController: animationControllerAtm,
-                              firstText: "Gym",
-                              secondText: "Card",
-                              animation: "assets/json/gym.json"),
-                        ),
+                        child: ReusableRow(
+                            animationController: animationControllerAtm,
+                            firstText: "Gym",
+                            secondText: "Card",
+                            animation: "assets/json/gym.json"),
                       ),
-                      ReusableRow(
-                          animationController: animationControllerId,
-                          firstText: "ID",
-                          secondText: "Card",
-                          animation: "assets/json/id_card.json"),
-                      ReusableRow(
-                          animationController: animationControllerAtm,
-                          firstText: "ATM",
-                          secondText: "Card",
-                          animation: "assets/json/atm_animation.json"),
-                      ReusableRow(
-                          animationController: animationControllerStudent,
-                          firstText: "Student",
-                          secondText: "Card",
-                          animation: "assets/json/student_card.json")
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const PickIdCard()));
+                        },
+                        child: ReusableRow(
+                            animationController: animationControllerId,
+                            firstText: "ID",
+                            secondText: "Card",
+                            animation: "assets/json/id_card.json"),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const PickAtmCard()));
+                        },
+                        child: ReusableRow(
+                            animationController: animationControllerAtm,
+                            firstText: "ATM",
+                            secondText: "Card",
+                            animation: "assets/json/atm_animation.json"),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PickStudentCard()));
+                        },
+                        child: ReusableRow(
+                            animationController: animationControllerStudent,
+                            firstText: "Student",
+                            secondText: "Card",
+                            animation: "assets/json/student_card.json"),
+                      )
                     ],
                   ))
             ],

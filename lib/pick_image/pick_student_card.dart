@@ -7,6 +7,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mobile_wallet/card_name_screen/card_name_screen.dart';
+import 'package:mobile_wallet/models/hive_model.dart';
 
 class PickStudentCard extends StatefulWidget {
   const PickStudentCard({super.key});
@@ -21,7 +22,7 @@ class _PickStudentCardState extends State<PickStudentCard>
   List<Uint8List> imagesList = [];
 
   Future<void> getBoxName() async {
-    imageBox = await Hive.openBox<Uint8List>("images_box");
+    imageBox = await Hive.openBox<Uint8List>("students_cards");
     imagesList = imageBox.values.toList();
     setState(() {});
   }
@@ -311,9 +312,12 @@ class _PickStudentCardState extends State<PickStudentCard>
                   ),
                   InkWell(
                     onTap: () async {
-                      if (image != null) {
-                        final imageBytes = image!.readAsBytesSync();
-                        storeImage(Uint8List.fromList(imageBytes));
+                      if (imagesList != null) {
+                        // final imageBytes = image!.readAsBytesSync();
+                        // storeImage(Uint8List.fromList(imageBytes));
+                        imageBox =
+                            await Hive.openBox<Uint8List>("students_cards");
+                        storeImage(ImagesData as Uint8List);
                       }
                       setState(() {});
                     },
