@@ -312,6 +312,7 @@ class _PickStudentCardState extends State<PickStudentCard>
                   ),
                   InkWell(
                     onTap: () async {
+                      // ignore: unnecessary_null_comparison
                       if (imagesList != null) {
                         // final imageBytes = image!.readAsBytesSync();
                         // storeImage(Uint8List.fromList(imageBytes));
